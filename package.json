@@ -1,6 +1,6 @@
 {
   "name": "@syncrosse/server",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "An easy library to create a server with websockets",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
