@@ -1,6 +1,6 @@
 # Syncrosse
 
-> An awesome project.
+> Easily connect your site with websockets.
 
 # Syncrosse Library Documentation
 
