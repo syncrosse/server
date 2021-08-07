@@ -1,9 +1,14 @@
 import { Server } from 'http';
 import * as Io from 'socket.io';
+import { Lobby } from './Lobby';
+import { UserId, Message, ActionHandler } from './types';
+import { User } from './User';
 
 export class Syncrosse {
   private server: Io.Server;
-  private actions: { [key: string]: (data: any) => void } = {};
+  private actions: { [key: string]: ActionHandler } = {};
+  private lobbies: { [key: string]: Lobby } = {};
+  private joinAction: ActionHandler = () => {};
 
   constructor(http: Server) {
     (this.server = new Io.Server(http)),
@@ -12,7 +17,7 @@ export class Syncrosse {
       };
   }
 
-  public onAction(action: string, callback: (data: any) => void): void {
+  public onAction(action: string, callback: ActionHandler): void {
     const restricted = ['connection', 'disconnect', 'message'];
     if (restricted.includes(action)) {
       throw new Error(`${action} is a reserved action`);
@@ -35,19 +40,32 @@ export class Syncrosse {
     }
   }
 
-  public onJoin(callback: (user: UserId) => void): void {
+  public onJoin(callback: ActionHandler): void {
+    this.joinAction = callback;
+  }
+
+  public start() {
     this.server.on('connection', (socket) => {
-      console.log('Added actions on connection');
+      const user = new User(socket.id, 'guest', (event, data) => {
+        this.triggerEvent(event, data, { only: [socket.id] });
+      });
+
       for (const action in this.actions) {
-        socket.on(action, this.actions[action]);
+        socket.on(action, (data) => {
+          this.actions[action](user, data);
+        });
       }
-      callback(socket.id);
+      this.joinAction(user);
     });
   }
 
-  public onLeave(callback: (user: UserId) => void): void {
+  public onLeave(callback: ActionHandler): void {
     this.onAction('disconnect', callback);
   }
-}
 
-type UserId = string;
+  public newLobby() {}
+
+  private onMessage(message: Message) {
+    this.server.emit('message', message);
+  }
+}

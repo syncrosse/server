@@ -27,12 +27,12 @@ describe('Syncrosse', () => {
     let clientSocket: any;
 
     await new Promise((res) => {
-      syncrosse.onAction('ping', () => {
-        console.log('pong');
+      syncrosse.onAction('ping', (user, data) => {
+        expect(user).toBeDefined();
         spy();
         res(null);
       });
-      syncrosse.onJoin(() => {});
+      syncrosse.start();
       httpServer.listen(() => {
         //@ts-ignore
         const port = httpServer.address()!.port;
