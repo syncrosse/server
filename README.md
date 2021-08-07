@@ -1,4 +1,4 @@
-![logo](src/Logo.png)
+![logo](docs/Logo.png)
 
 # syncrosse
 
