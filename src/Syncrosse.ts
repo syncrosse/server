@@ -17,6 +17,8 @@ export class Syncrosse {
         transports: ['websocket'],
       };
 
+    this.newLobby(''); // Create the default lobby
+
     //set up default actions
     this.onAction('message', ({ user, data, lobby }) => {
       const message: Message = {
