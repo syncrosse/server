@@ -1,4 +1,4 @@
-![logo](https://lolsketch.com/assets/images/logo_colour.svg)
+![logo](src/Logo.png)
 
 # syncrosse
 
@@ -9,4 +9,5 @@
 - Built in React support.
 
 [GitHub](https://github.com/syncrosse/server/)
+[Documentation](https://syncrosse.github.io/server/index.html)
 [Getting Started](#getting-started)
