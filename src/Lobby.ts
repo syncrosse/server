@@ -3,12 +3,12 @@ import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { UserId, Message } from './types';
 
 export class Lobby {
-  private players: UserId[];
-  private chatHistory: Message[];
+  public users: UserId[];
+  public chatHistory: Message[];
 
   constructor(private socket: BroadcastOperator<DefaultEventsMap>, public id: string) {
     this.chatHistory = [];
-    this.players = [];
+    this.users = [];
   }
 
   public triggerEvent(event: string, data?: any, opts?: { except: UserId[] } | { only: UserId[] }): void {
@@ -24,5 +24,10 @@ export class Lobby {
     } else {
       this.socket.emit(event, data);
     }
+  }
+
+  public sendMessage(message: Message): void {
+    this.chatHistory.push(message);
+    this.triggerEvent('message', message);
   }
 }

@@ -2,13 +2,13 @@ import { Server } from 'http';
 import { nanoid } from 'nanoid';
 import * as Io from 'socket.io';
 import { Lobby } from './Lobby';
-import { Message, ActionHandler } from './types';
+import { ActionHandler, Message } from './types';
 import { User } from './User';
 
 export class Syncrosse {
   private server: Io.Server;
   private actions: { [key: string]: ActionHandler } = {};
-  private lobbies: { [key: string]: Lobby } = {};
+  public lobbies: { [key: string]: Lobby } = {};
   private joinAction: ActionHandler = () => {};
 
   constructor(http: Server) {
@@ -16,11 +16,28 @@ export class Syncrosse {
       {
         transports: ['websocket'],
       };
+
+    //set up default actions
+    this.onAction('message', ({ user, data, lobby }) => {
+      const message: Message = {
+        author: user.name,
+        content: data,
+      };
+      lobby.chatHistory.push(message);
+      lobby.triggerEvent('message', message);
+    });
+
+    this.joinAction = ({ user, lobby }) => {
+      lobby.triggerEvent('message', {
+        author: 'System',
+        content: `${user.name} has joined the lobby`,
+      });
+    };
   }
 
   public onAction(action: string, callback: ActionHandler): void {
     const restricted = ['connection', 'disconnect', 'message'];
-    if (restricted.includes(action)) {
+    if (restricted.includes(action) && this.actions['message']) {
       throw new Error(`${action} is a reserved action`);
     }
     this.actions[action] = callback;
@@ -66,7 +83,7 @@ export class Syncrosse {
     return this.lobbies[id];
   }
 
-  private onMessage(message: Message) {
+  public sendGlobalMessage(message: Message) {
     this.server.emit('message', message);
   }
 }
