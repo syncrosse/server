@@ -128,6 +128,6 @@ Send a specific action to the server with the provided data.
 
 ### useSyncrosse
 ```typescript
-useSyncrosse(): { messages, syncrosse }
+useSyncrosse(lobbyId?: string): { messages, syncrosse }
 ```
-Creates a react hook for Syncrosse, and returns the syncrosse instance as well as a list of [Message](#message) objects.
+Creates a react hook for Syncrosse, and returns the syncrosse instance as well as a list of [Message](#message) objects. Connects to lobby specified by lobbyid, or default lobby if none is specified.
