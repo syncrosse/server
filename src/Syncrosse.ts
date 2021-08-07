@@ -85,6 +85,16 @@ export class Syncrosse {
     return this.lobbies[id];
   }
 
+  public deleteLobby(lobbyId: string) {
+    const lobby = this.lobbies[lobbyId];
+
+    if (lobby) {
+      lobby.disconnectAllSockets();
+
+      delete this.lobbies[lobbyId];
+    }
+  }
+
   public sendGlobalMessage(message: Message) {
     this.server.emit('message', message);
   }

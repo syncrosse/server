@@ -1,4 +1,4 @@
-![logo](https://lolsketch.com/assets/images/logo_colour.svg)
+![logo](Logo.png)
 
 # syncrosse
 

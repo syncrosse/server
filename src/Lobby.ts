@@ -30,4 +30,8 @@ export class Lobby {
     this.chatHistory.push(message);
     this.triggerEvent('message', message);
   }
+
+  public disconnectAllSockets() {
+    this.socket.disconnectSockets();
+  }
 }
