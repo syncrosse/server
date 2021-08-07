@@ -1,24 +1,33 @@
 {
-  "name": "server",
+  "name": "@syncrosse/server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "An easy library to create a server with websockets",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "test": "jest --config jestconfig.json",
+    "build": "tsc",
+    "prepare" : "npm run build",
+    "prepublishOnly" : "npm test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/syncrosse/server.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["websockets", "server", "multiplayer", "online", "chat"],
+  "files": ["lib/**/*"],
+  "author": "loganarmack",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/syncrosse/server/issues"
   },
   "homepage": "https://github.com/syncrosse/server#readme",
   "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
-  }
+  },
+  "dependencies": {}
 }
