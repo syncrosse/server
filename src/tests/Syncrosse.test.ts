@@ -22,13 +22,16 @@ describe('Syncrosse', () => {
 
   it('should trigger events when called', async () => {
     const syncrosse = new Syncrosse(httpServer);
+    const lobby = syncrosse.newLobby();
     const spy = jest.fn();
 
     let clientSocket: any;
 
     await new Promise((res) => {
-      syncrosse.onAction('ping', (user, data) => {
+      syncrosse.onAction('ping', ({ user, data, lobby: curLobby }) => {
         expect(user).toBeDefined();
+        expect(curLobby.id).toBe(lobby.id);
+        expect(data).toBe('Hey!');
         spy();
         res(null);
       });
@@ -36,14 +39,22 @@ describe('Syncrosse', () => {
       httpServer.listen(() => {
         //@ts-ignore
         const port = httpServer.address()!.port;
-        clientSocket = new Client(`http://localhost:${port}`);
+        clientSocket = new Client(`http://localhost:${port}`, { query: { lobbyId: lobby.id } });
         clientSocket.on('connect', () => {});
-        clientSocket.emit('ping');
+        clientSocket.emit('ping', 'Hey!');
       });
     });
     expect(spy).toHaveBeenCalled();
     //@ts-ignore
     syncrosse.server.close();
     clientSocket.close();
+  });
+
+  it('newLobby creates a new lobby', async () => {
+    const syncrosse = new Syncrosse(httpServer);
+    const lobby = syncrosse.newLobby();
+
+    expect(lobby.id.length).toBeGreaterThan(5);
+    expect(lobby.triggerEvent).toBeDefined();
   });
 });

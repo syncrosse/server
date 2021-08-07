@@ -1,7 +1,8 @@
 import { Server } from 'http';
+import { nanoid } from 'nanoid';
 import * as Io from 'socket.io';
 import { Lobby } from './Lobby';
-import { UserId, Message, ActionHandler } from './types';
+import { Message, ActionHandler } from './types';
 import { User } from './User';
 
 export class Syncrosse {
@@ -25,37 +26,32 @@ export class Syncrosse {
     this.actions[action] = callback;
   }
 
-  public triggerEvent(event: string, data?: any, opts?: { except: UserId[] } | { only: UserId[] }): void {
-    if (opts) {
-      const { only } = opts as { only: UserId[] };
-      const { except } = opts as { except: UserId[] };
-
-      if (only) {
-        this.server.to(only).emit(event, data);
-      } else if (except) {
-        this.server.except(except).emit(event, data);
-      }
-    } else {
-      this.server.emit(event, data);
-    }
-  }
-
   public onJoin(callback: ActionHandler): void {
     this.joinAction = callback;
   }
 
   public start() {
-    this.server.on('connection', (socket) => {
-      const user = new User(socket.id, 'guest', (event, data) => {
-        this.triggerEvent(event, data, { only: [socket.id] });
+    this.server.on('connection', (userSocket) => {
+      const { lobbyId } = userSocket.handshake.query as {
+        lobbyId: string;
+      };
+
+      const lobby = this.lobbies[lobbyId];
+      if (!lobby) userSocket.disconnect();
+
+      userSocket.join(lobbyId);
+
+      const user = new User(userSocket.id, 'guest', (event, data) => {
+        userSocket.emit(event, data);
       });
 
       for (const action in this.actions) {
-        socket.on(action, (data) => {
-          this.actions[action](user, data);
+        userSocket.on(action, (data) => {
+          this.actions[action]({ user, data, lobby });
         });
       }
-      this.joinAction(user);
+
+      this.joinAction({ user, lobby, data: null });
     });
   }
 
@@ -63,7 +59,12 @@ export class Syncrosse {
     this.onAction('disconnect', callback);
   }
 
-  public newLobby() {}
+  public newLobby() {
+    const id = nanoid();
+    this.lobbies[id] = new Lobby(this.server.in(id), id);
+
+    return this.lobbies[id];
+  }
 
   private onMessage(message: Message) {
     this.server.emit('message', message);

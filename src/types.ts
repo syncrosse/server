@@ -1,5 +1,4 @@
-import { User } from './User';
-
+import { Lobby, User } from '.';
 export type UserId = string;
 
 export interface Message {
@@ -8,4 +7,4 @@ export interface Message {
   time: Date;
 }
 
-export type ActionHandler = (user: User, data?: any) => void;
+export type ActionHandler = (actionData: { user: User; data: any; lobby: Lobby }) => void;
