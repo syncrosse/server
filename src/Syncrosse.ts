@@ -59,8 +59,8 @@ export class Syncrosse {
     this.onAction('disconnect', callback);
   }
 
-  public newLobby() {
-    const id = nanoid();
+  public newLobby(lobbyId?: string) {
+    const id = lobbyId ?? nanoid();
     this.lobbies[id] = new Lobby(this.server.in(id), id);
 
     return this.lobbies[id];
