@@ -1,1 +1,1 @@
-export class Syncrosse {}
+export { Syncrosse } from './Syncrosse';

@@ -7,15 +7,26 @@
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
-    "prepare" : "npm run build",
-    "prepublishOnly" : "npm test"
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/syncrosse/server.git"
   },
-  "keywords": ["websockets", "server", "multiplayer", "online", "chat"],
-  "files": ["lib/**/*"],
+  "keywords": [
+    "websockets",
+    "server",
+    "multiplayer",
+    "online",
+    "chat"
+  ],
+  "files": [
+    "lib/**/*"
+  ],
   "author": "loganarmack",
   "license": "ISC",
   "bugs": {
@@ -29,5 +40,7 @@
     "ts-jest": "^27.0.4",
     "typescript": "^4.3.5"
   },
-  "dependencies": {}
+  "dependencies": {
+    "socket.io": "^4.1.3"
+  }
 }
