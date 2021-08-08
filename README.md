@@ -10,6 +10,6 @@
 
 [Documentation](https://syncrosse.github.io/server/index.html)
 
-[Getting Started](#getting-started)
+[Getting Started](http://localhost:3000/#/?id=getting-started)
 
 [@syncrosse/client](https://github.com/syncrosse/client)

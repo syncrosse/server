@@ -9,4 +9,4 @@
 - Built in React support.
 
 [GitHub](https://github.com/syncrosse/server/)
-[Getting Started](#syncrosse-library-documentation)
+[Getting Started](#getting-started)
