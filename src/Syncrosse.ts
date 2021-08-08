@@ -39,7 +39,7 @@ export class Syncrosse {
 
   public onAction(action: string, callback: ActionHandler): void {
     const restricted = ['connection', 'disconnect', 'message'];
-    if (restricted.includes(action) && this.actions['message']) {
+    if (restricted.includes(action) && this.actions[action]) {
       throw new Error(`${action} is a reserved action`);
     }
     this.actions[action] = callback;
