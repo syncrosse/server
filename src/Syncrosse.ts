@@ -51,8 +51,9 @@ export class Syncrosse {
 
   public start() {
     this.server.on('connection', (userSocket) => {
-      const { lobbyId } = userSocket.handshake.query as {
+      const { lobbyId, name } = userSocket.handshake.query as {
         lobbyId: string;
+        name: string;
       };
 
       const lobby = this.lobbies[lobbyId];
@@ -60,7 +61,7 @@ export class Syncrosse {
 
       userSocket.join(lobbyId);
 
-      const user = new User(userSocket.id, 'guest', (event, data) => {
+      const user = new User(userSocket.id, name ? name : 'guest', (event, data) => {
         userSocket.emit(event, data);
       });
 

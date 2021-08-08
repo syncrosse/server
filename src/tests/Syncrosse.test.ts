@@ -73,7 +73,7 @@ describe('Syncrosse', () => {
       httpServer.listen(() => {
         //@ts-ignore
         const port = httpServer.address()!.port;
-        clientSocket = new Client(`http://localhost:${port}`, { query: { lobbyId: lobby.id } });
+        clientSocket = new Client(`http://localhost:${port}`, { query: { lobbyId: lobby.id, name: 'Tester' } });
         clientSocket.on('connect', () => {});
         clientSocket.on('message', (msg: Message) => {
           message = msg;
@@ -84,7 +84,7 @@ describe('Syncrosse', () => {
       });
     });
     expect(message!.content).toBe('Hey!');
-    expect(message!.author).toBe('guest');
+    expect(message!.author).toBe('Tester');
     expect(spy).toHaveBeenCalled();
     //@ts-ignore
     syncrosse.server.close();
